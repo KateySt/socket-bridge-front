@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "about": "About",
+    "users": "Users",
+    "companies": "Companies",
+    "app": "App"
+  },
+  "Metadata": {
+    "title": "title"
+  }
+}
