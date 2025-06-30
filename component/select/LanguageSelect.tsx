@@ -1,12 +1,12 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {Link} from "@/i18n/navigation";
-import {useLocale} from "use-intl";
+import React, { useEffect, useState } from "react";
+import { Link } from "@/i18n/navigation";
+import { useLocale } from "use-intl";
 
 const langs = [
-  {code: "en", label: "English"},
-  {code: "uk", label: "Українська"},
+  { code: "en", label: "English" },
+  { code: "uk", label: "Українська" },
 ];
 
 export function LanguageSelect() {
@@ -19,16 +19,16 @@ export function LanguageSelect() {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 rounded-md border p-1 bg-base-100 shadow">
+    <div className="flex items-center gap-2 rounded-xl bg-secondary p-1 shadow-md">
       {langs.map((lang) => (
         <Link
           key={lang.code}
           href={rout}
           locale={lang.code}
-          className={`px-3 py-1 rounded-md text-sm transition-colors ${
+          className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
             currentLocale === lang.code
-              ? "bg-primary text-primary-content"
-              : "hover:bg-base-200"
+              ? "bg-secondary-content text-secondary"
+              : "hover:bg-secondary-focus text-secondary-content"
           }`}
         >
           {lang.label}

@@ -1,27 +1,20 @@
-import { use } from 'react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { fetchUsers } from '@/api/users';
+import {getTranslations, setRequestLocale} from 'next-intl/server';
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
-  const t = await getTranslations({ locale: params.locale, namespace: 'Metadata' });
+export async function generateMetadata({params}: { params: Promise<{ locale: string }> }) {
+  const {locale} = await params;
+  const t = await getTranslations({locale: locale, namespace: 'Metadata'});
   return {
     title: t('title'),
   };
 }
 
-export default function Home({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+export default async function Home({params}: { params: Promise<{ locale: string }> }) {
+  const {locale} = await params;
   setRequestLocale(locale);
-
-  const users = use(fetchUsers());
-
-  console.log(users);
 
   return (
     <main className="p-10">
       <h1 className="text-4xl font-bold mb-4">Welcome to the App</h1>
-      <p className="text-lg">Users count: {users.length}</p>
-      <input type="text" placeholder="Secondary" className="input input-secondary" />
     </main>
   );
 }
