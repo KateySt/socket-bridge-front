@@ -4,5 +4,5 @@ export enum Router {
     Users = "/users",
     Companies = "/companies",
     Register = "/register",
-    Login = "/login",
+    Login = "/login"
 }

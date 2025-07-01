@@ -10,6 +10,7 @@ async function logout() {
   "use server";
   const cookieStore = await cookies();
   cookieStore.delete("access_token");
+  cookieStore.delete("user");
   redirect(Router.Login);
 }
 
@@ -29,7 +30,7 @@ export async function Header() {
           <li><Link href={Router.Companies}>{t("nav.companies")}</Link></li>
           <li>
             <form action={logout}>
-              <button type="submit" className="btn btn-sm btn-accent w-full mt-2">
+              <button type="submit" className="btn btn-sm btn-accent">
                 Logout
               </button>
             </form>

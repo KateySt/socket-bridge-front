@@ -1,39 +1,59 @@
+import {serverApiRequest} from "@/lib/axios";
+
 export async function login(user: { username: string; password: string }) {
-  const res = await fetch('http://localhost:3000/api/login', {
+  return await serverApiRequest({
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-    body: JSON.stringify(user),
-    credentials: 'include',
+    url: '/login',
+    data: user,
   });
-
-  if (!res.ok) throw new Error('Failed to login');
-
-  return res.json();
 }
 
-export async function register(user: { username: string; password: string; first_name: string; last_name: string; email: string;}) {
-  const res = await fetch('http://localhost:3000/api/register', {
+export async function register(user: {
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}) {
+  return await serverApiRequest({
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-    credentials: 'include',
-    body: JSON.stringify(user),
+    url: '/register',
+    data: user,
   });
-
-  if (!res.ok) throw new Error('Failed to register');
-
-  return res.json();
 }
 
-export async function fetchUsers() {
-  const res = await fetch('http://localhost:3000/api/users', {
-    cache: 'no-store'
+export async function me() {
+
+  return await serverApiRequest({
+    method: 'GET',
+    url: '/me',
   });
-  if (!res.ok) throw new Error('Failed to fetch users');
-  return res.json();
 }
+
+export async function getUsers() {
+  return await serverApiRequest({
+    method: 'GET',
+    url: '/users',
+  });
+}
+
+export async function changeUser(
+  id: string,
+  data: { first_name: string; last_name: string }
+) {
+  return await serverApiRequest({
+    method: 'PUT',
+    url: `/users/${id}`,
+    data,
+  });
+}
+
+export async function deleteUser(
+  id: string
+) {
+  return await serverApiRequest({
+    method: 'DELETE',
+    url: `/users/${id}`,
+  });
+}
+

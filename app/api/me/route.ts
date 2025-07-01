@@ -1,4 +1,4 @@
-import {NextRequest, NextResponse} from "next/server";
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function GET(request: NextRequest) {
   const token = request.headers.get('authorization')?.trim();
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const backendRes = await fetch(process.env.NEXT_PUBLIC_URL_BACK + "/user/api/users", {
+  const backendRes = await fetch(process.env.NEXT_PUBLIC_URL_BACK + "/user/api/me", {
     method: 'GET',
     headers: {
       "Authorization": token,

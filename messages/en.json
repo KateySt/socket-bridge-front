@@ -3,7 +3,10 @@
     "about": "About",
     "users": "Users",
     "companies": "Companies",
-    "app": "App"
+    "app": "App",
+    "login": "Login",
+    "register": "Registration",
+    "profile": "Profile"
   },
   "Metadata": {
     "title": "title"

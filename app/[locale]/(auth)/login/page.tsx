@@ -1,9 +1,10 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {redirect} from 'next/navigation';
-import {login} from '@/api/users';
+import {login, me} from '@/api/users';
 import {cookies} from "next/headers";
 import {Link} from "@/i18n/navigation";
 import {Router} from "@/utils/router";
+import {googleLink} from "@/api";
 
 export async function generateMetadata({params}: { params: Promise<{ locale: string }> }) {
   const {locale} = await params;
@@ -30,16 +31,27 @@ export default async function LoginPage({params}: { params: Promise<{ locale: st
           if (!username || !password) return
 
           try {
-            const result = await login({username, password});
-            const cookieStore = await cookies();
-            cookieStore.set('access_token', result.access_token, {
-              httpOnly: true,
-              path: '/',
+            await login({username, password}).then(async token=>{
+              const cookieStore = await cookies();
+
+              cookieStore.set('access_token', token.access_token, {
+                httpOnly: true,
+                path: '/',
+                maxAge: 1800,
+              });
+
+              const user = await me(token.access_token);
+
+              cookieStore.set('user', JSON.stringify(user), {
+                httpOnly: true,
+                path: '/',
+                maxAge: 1800,
+              });
             });
 
-            redirect(`/${locale}`);
+            redirect(Router.Home);
           } catch (err) {
-            if ((err as {message:string})?.message === 'NEXT_REDIRECT') throw err;
+            if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
             console.error('Login error:', err);
           }
         }}
@@ -63,6 +75,9 @@ export default async function LoginPage({params}: { params: Promise<{ locale: st
         </button>
         <Link href={Router.Register}>Registration</Link>
       </form>
+     <Link href={googleLink}>
+       Google
+     </Link>
     </main>
   );
 }

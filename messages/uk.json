@@ -3,7 +3,10 @@
     "about": "Про нас",
     "users": "Користувачі",
     "companies": "Компанії",
-    "app": "Застосунок"
+    "app": "Застосунок",
+    "login": "Login",
+    "register": "Registration",
+    "profile": "Profile"
   },
   "Metadata": {
     "title": "title"

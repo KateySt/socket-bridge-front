@@ -1,20 +1,21 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {redirect} from 'next/navigation';
 import {cookies} from "next/headers";
-import {register} from '@/api/users';
+import {me, register} from '@/api/users';
 import {Link} from "@/i18n/navigation";
 import {Router} from "@/utils/router";
+import {googleLink} from "@/api";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale: locale, namespace: 'Metadata' });
+export async function generateMetadata({params}: { params: Promise<{ locale: string }> }) {
+  const {locale} = await params;
+  const t = await getTranslations({locale: locale, namespace: 'Metadata'});
   return {
     title: t('title'),
   };
 }
 
-export default async function RegisterPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
+export default async function RegisterPage({params}: { params: Promise<{ locale: string }> }) {
+  const {locale} = await params;
   setRequestLocale(locale);
 
   return (
@@ -33,22 +34,31 @@ export default async function RegisterPage({ params }: { params: Promise<{ local
           if (!username || !password || !first_name || !last_name || !email) return;
 
           try {
-            const result = await register({
+            await register({
               username,
               password,
               first_name,
               last_name,
               email,
+            }).then(async token => {
+              const user = await me(token.access_token);
+
+              const cookieStore = await cookies();
+
+              cookieStore.set('access_token', token.access_token, {
+                httpOnly: true,
+                path: '/',
+                maxAge: 1800,
+              });
+
+              cookieStore.set('user', JSON.stringify(user), {
+                httpOnly: true,
+                path: '/',
+                maxAge: 1800,
+              });
             });
 
-            const cookieStore = await cookies();
-            cookieStore.set('access_token', result.access_token, {
-              httpOnly: true,
-
-              path: '/',
-            });
-
-            redirect(`/${locale}`);
+            redirect(Router.Home);
           } catch (err) {
             if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
             console.error('Registration error:', err);
@@ -91,8 +101,13 @@ export default async function RegisterPage({ params }: { params: Promise<{ local
         <button type="submit" className="btn btn-secondary">
           Register
         </button>
-        <Link href={Router.Login}>Login</Link>
+        <Link href={Router.Login} className="text-center text-sm text-secondary-content underline">
+          Already have an account? Login
+        </Link>
       </form>
+      <Link href={googleLink}>
+        Google
+      </Link>
     </main>
   );
 }

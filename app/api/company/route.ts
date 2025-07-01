@@ -1,7 +1,8 @@
 import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(request: NextRequest) {
-  const token = request.headers.get('authorization')?.trim();
+  const token = request.headers.get("authorization")?.trim();
+  const userId = request.headers.get("x-user-id")?.trim();
 
   if (!token) {
     return NextResponse.json(
@@ -10,11 +11,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const backendRes = await fetch(process.env.NEXT_PUBLIC_URL_BACK + "/user/api/users", {
+  const backendRes = await fetch(process.env.NEXT_PUBLIC_URL_BACK + "/company/api/companies", {
     method: 'GET',
     headers: {
       "Authorization": token,
       'Content-Type': 'application/json',
+      ...(userId && { "X-User-Id": userId }),
     },
   });
 
