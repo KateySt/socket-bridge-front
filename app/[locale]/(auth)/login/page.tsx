@@ -40,7 +40,7 @@ export default async function LoginPage({params}: { params: Promise<{ locale: st
                 maxAge: 1800,
               });
 
-              const user = await me(token.access_token);
+              const user = await me();
 
               cookieStore.set('user', JSON.stringify(user), {
                 httpOnly: true,

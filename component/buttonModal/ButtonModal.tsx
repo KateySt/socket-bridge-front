@@ -1,9 +1,9 @@
 'use client'
 import React from 'react';
 
-const ButtonModal = ({id, text}:{id: string, text: string}) => {
+const ButtonModal = ({id, text}: { id: string, text: string }) => {
   return (
-    <button className="btn btn-secondary" onClick={() => {
+    <button type='button' className="btn w-fit btn-secondary" onClick={() => {
       (document.getElementById(id) as HTMLDialogElement)?.showModal();
     }}>
       {text}

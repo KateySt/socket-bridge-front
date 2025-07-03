@@ -127,8 +127,15 @@ export async function PUT(request: NextRequest, {params}: { params: { id: string
 
 export async function DELETE(request: NextRequest, {params}: { params: { id: string } }) {
   const token = request.headers.get("authorization")?.trim();
-  const {id} = params;
-  const {companyId} = await request.json();
+  const {id} = await params;
+  let companyId: string | undefined;
+
+  try {
+    const body = await request.json();
+    companyId = body.companyId;
+  } catch {
+    return NextResponse.json({ success: false, error: "Invalid or missing JSON body" }, { status: 400 });
+  }
 
   if (!token) {
     return NextResponse.json(

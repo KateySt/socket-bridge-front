@@ -19,7 +19,11 @@ const EditCompanyModal = () => {
           const userRaw = JSON.parse(cookieStore.get("user")?.value ?? "");
           await changeCompany(
             userRaw.id,
-            {...formData, companyId:company.id},
+            {
+              name: formData.get("name"),
+              description: formData.get("description"),
+              companyId: company.id
+            },
           )
         }} className="space-y-4">
           <input

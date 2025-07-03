@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 
 export async function PUT(request: NextRequest, {params}: { params: { id: string } }) {
-  const {firstName, lastName} = await request.json();
+  const {first_name, last_name} = await request.json();
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
 
@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest, {params}: { params: { id: string
         Authorization: token,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({first_name: firstName, last_name: lastName}),
+      body: JSON.stringify({first_name, last_name}),
     }
   );
 
@@ -52,7 +52,7 @@ export async function PUT(request: NextRequest, {params}: { params: { id: string
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   const token = request.headers.get("authorization")?.trim();
-  const { id } = params;
+  const { id } = await params;
 
   if (!token) {
     return NextResponse.json(

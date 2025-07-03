@@ -41,8 +41,6 @@ export default async function RegisterPage({params}: { params: Promise<{ locale:
               last_name,
               email,
             }).then(async token => {
-              const user = await me(token.access_token);
-
               const cookieStore = await cookies();
 
               cookieStore.set('access_token', token.access_token, {
@@ -50,6 +48,8 @@ export default async function RegisterPage({params}: { params: Promise<{ locale:
                 path: '/',
                 maxAge: 1800,
               });
+
+              const user = await me();
 
               cookieStore.set('user', JSON.stringify(user), {
                 httpOnly: true,

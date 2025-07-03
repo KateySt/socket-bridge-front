@@ -11,8 +11,8 @@ export default function DeleteUserModal({action}: { action: () => void }) {
 
       <Modal id={modalId} title="Confirm Deletion">
         <p className="mb-4">Are you sure you want to delete your profile? This action cannot be undone.</p>
-        <form action={action}>
-          <button type="submit" className="btn btn-error mr-2">Yes, Delete</button>
+        <form action={action} className='w-full'>
+          <button type="submit" className="btn w-full btn-error mr-2">Yes, Delete</button>
         </form>
       </Modal>
     </>

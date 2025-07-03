@@ -1,5 +1,5 @@
 import {Modal} from "@/component/modal/Modal";
-import {createCompanyAction} from "@/action/createCompanyAction";
+import {company} from "@/action/company";
 import ButtonModal from "@/component/buttonModal/ButtonModal";
 import React from "react";
 
@@ -12,7 +12,7 @@ export default function CreateCompanyModal() {
 
       <Modal id={modalId} title="Create New Company">
         <form
-          action={createCompanyAction}
+          action={company}
           className="space-y-4"
         >
           <input

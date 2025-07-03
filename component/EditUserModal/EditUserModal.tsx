@@ -1,6 +1,6 @@
 import {Modal} from "./../modal/Modal";
 import React from 'react';
-import {updateUserAction} from "@/action/updateUserAction";
+import {user} from "@/action/user";
 import ButtonModal from "@/component/buttonModal/ButtonModal";
 
 const modalId = 'edit-user-modal';
@@ -11,7 +11,7 @@ export default function EditUserModal() {
       <ButtonModal text='Edit user' id={modalId}/>
 
       <Modal id={modalId} title="Edit User">
-        <form action={updateUserAction} className="space-y-4">
+        <form action={user} className="space-y-4">
           <input
             type="text"
             name="firstName"

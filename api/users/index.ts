@@ -57,3 +57,9 @@ export async function deleteUser(
   });
 }
 
+export async function getInvitations(id: string) {
+  return await serverApiRequest({
+    method: 'GET',
+    url: `/me/invitations?userId=${id}`,
+  });
+}
