@@ -1,7 +1,18 @@
 "use server"
 
 import {cookies} from "next/headers";
-import {createCompany, deleteCompany, getCompany, revokeInvitationCompany} from "@/api/companies";
+import {
+  appointAminCompany,
+  approveRequestCompany,
+  createCompany,
+  deleteCompany,
+  getCompany,
+  leaveCompanyCompany,
+  rejectRequestCompany,
+  removeAminCompany,
+  removeUserCompany,
+  revokeInvitationCompany
+} from "@/api/companies";
 import {redirect} from "next/navigation";
 import {Router} from "@/utils/router";
 
@@ -72,4 +83,124 @@ export async function selectCompanyAction(formData: FormData) {
     maxAge: 1800,
   });
   redirect(`/companies/${companyId}`);
+}
+
+
+export async function approveRequestAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+    const userId = formData.get('userId')?.toString() || '';
+
+    if (!companyId || !userId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await approveRequestCompany(companyId, user.id, userId);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function rejectRequestAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+    const userId = formData.get('userId')?.toString() || '';
+
+    if (!companyId || !userId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await rejectRequestCompany(companyId, user.id, userId);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function removeUserAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+    const userId = formData.get('userId')?.toString() || '';
+
+    if (!companyId || !userId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await removeUserCompany(companyId, user.id, userId);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function leaveCompanyAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+
+    if (!companyId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await leaveCompanyCompany(companyId, user.id);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function removeAdminAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+    const userId = formData.get('userId')?.toString() || '';
+
+    if (!companyId || !userId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await removeAminCompany(companyId, user.id, userId);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function appointAdminAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+    const userId = formData.get('userId')?.toString() || '';
+
+    if (!companyId || !userId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await appointAminCompany(companyId, user.id, userId);
+    redirect(`/companies/${companyId}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
 }

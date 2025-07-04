@@ -1,4 +1,5 @@
 import {serverApiRequest} from "@/lib/axios";
+import {appointAdminAction} from "@/action/company";
 
 export async function getCompanies(userId: string) {
   return await serverApiRequest({
@@ -83,7 +84,7 @@ export async function revokeInvitationCompany(companyId: string, ownerId: string
   });
 }
 
-export async function acceptInvitationCompany(companyId: string,  userId: string) {
+export async function acceptInvitationCompany(companyId: string, userId: string) {
   return await serverApiRequest({
     method: 'POST',
     url: '/company/memberships/accept',
@@ -94,12 +95,135 @@ export async function acceptInvitationCompany(companyId: string,  userId: string
   });
 }
 
-export async function declineInvitationCompany(companyId: string,  userId: string) {
+export async function declineInvitationCompany(companyId: string, userId: string) {
   return await serverApiRequest({
     method: 'POST',
     url: '/company/memberships/decline',
     data: {
       companyId,
+      userId,
+    }
+  });
+}
+
+export async function sendRequestCompany(companyId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/request',
+    data: {
+      companyId,
+      userId,
+    }
+  });
+}
+
+export async function cancelRequestCompany(companyId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/cancel',
+    data: {
+      companyId,
+      userId,
+    }
+  });
+}
+
+export async function getListRequestsCompany(companyId: string, ownerId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: `/company/${companyId}/requests`,
+    data: {
+      ownerId,
+    }
+  });
+}
+
+export async function approveRequestCompany(companyId: string, ownerId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/approve',
+    data: {
+      companyId,
+      ownerId,
+      userId,
+    }
+  });
+}
+
+export async function rejectRequestCompany(companyId: string, ownerId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/reject',
+    data: {
+      companyId,
+      ownerId,
+      userId,
+    }
+  });
+}
+
+export async function getListMembersCompany(companyId: string, ownerId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: `/company/${companyId}/members`,
+    data: {
+      ownerId,
+    }
+  });
+}
+
+export async function removeUserCompany(companyId: string, ownerId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/remove',
+    data: {
+      companyId,
+      ownerId,
+      userId,
+    }
+  });
+}
+
+export async function leaveCompanyCompany(companyId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/leave',
+    data: {
+      companyId,
+      userId,
+    }
+  });
+}
+
+export async function getListAdminsCompany(companyId: string, ownerId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: `/company/${companyId}/admins`,
+    data: {
+      ownerId,
+    }
+  });
+}
+
+export async function removeAminCompany(companyId: string, ownerId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/remove/admin',
+    data: {
+      companyId,
+      ownerId,
+      userId,
+    }
+  });
+}
+
+export async function appointAminCompany(companyId: string, ownerId: string, userId: string) {
+  return await serverApiRequest({
+    method: 'POST',
+    url: '/company/memberships/appoint',
+    data: {
+      companyId,
+      ownerId,
       userId,
     }
   });

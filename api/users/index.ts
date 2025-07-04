@@ -63,3 +63,10 @@ export async function getInvitations(id: string) {
     url: `/me/invitations?userId=${id}`,
   });
 }
+
+export async function getRequests(id: string) {
+  return await serverApiRequest({
+    method: 'GET',
+    url: `/me/requests?userId=${id}`,
+  });
+}

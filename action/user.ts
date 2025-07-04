@@ -4,7 +4,12 @@ import {changeUser, deleteUser} from "@/api/users";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import {Router} from "@/utils/router";
-import {acceptInvitationCompany, declineInvitationCompany} from "@/api/companies";
+import {
+  acceptInvitationCompany,
+  cancelRequestCompany,
+  declineInvitationCompany,
+  sendRequestCompany
+} from "@/api/companies";
 
 export async function user(formData: FormData) {
   const cookieStore = await cookies();
@@ -25,7 +30,6 @@ export async function declineInvitationAction(formData: FormData) {
   try {
     const cookieStore = await cookies();
 
-
     const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
 
     const companyId = formData.get('companyId')?.toString() || '';
@@ -45,7 +49,6 @@ export async function declineInvitationAction(formData: FormData) {
 export async function acceptInvitationAction(formData: FormData) {
   try {
     const cookieStore = await cookies();
-
 
     const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
 
@@ -72,6 +75,46 @@ export async function deleteProfile() {
     cookieStore.delete("access_token");
     cookieStore.delete("user");
     redirect(Router.Login);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function sendRequestAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+
+    if (!companyId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await sendRequestCompany(companyId, user.id);
+
+    redirect(`/users/${user.id}`);
+  } catch (err) {
+    if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
+    console.error(err);
+  }
+}
+
+export async function cancelRequestAction(formData: FormData) {
+  try {
+    const cookieStore = await cookies();
+
+    const user = JSON.parse(cookieStore.get('user')?.value ?? '{}');
+
+    const companyId = formData.get('companyId')?.toString() || '';
+
+    if (!companyId || !user.id) {
+      throw new Error('Missing required fields');
+    }
+
+    await cancelRequestCompany(companyId, user.id);
+    redirect(`/users/${user.id}`);
   } catch (err) {
     if ((err as { message: string })?.message === 'NEXT_REDIRECT') throw err;
     console.error(err);
