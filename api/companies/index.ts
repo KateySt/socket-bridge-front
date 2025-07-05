@@ -1,5 +1,4 @@
 import {serverApiRequest} from "@/lib/axios";
-import {appointAdminAction} from "@/action/company";
 
 export async function getCompanies(userId: string) {
   return await serverApiRequest({
