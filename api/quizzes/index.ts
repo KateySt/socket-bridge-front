@@ -1,16 +1,32 @@
 import {serverApiRequest} from "@/lib/axios";
 
-export async function createQuiz(quiz) {
+export async function createQuiz(quiz: any) {
   return await serverApiRequest({
-    method: 'POST',
-    url: '/quizzes',
+    method: "POST",
+    url: "/quizzes",
     data: quiz,
   });
 }
 
 export async function getCompanyQuizzes(id: string) {
   return await serverApiRequest({
-    method: 'GET',
+    method: "GET",
     url: `/company/${id}/quizzes`,
+  });
+}
+
+export async function updateQuiz(quiz: any, id: string) {
+  return await serverApiRequest({
+    method: "PUT",
+    url: `/quizzes/${id}`,
+    data: quiz,
+  });
+}
+
+export async function deleteQuiz(quizId: string, id: string) {
+  return await serverApiRequest({
+    method: "DELETE",
+    url: `/quizzes/${id}`,
+    data: quizId,
   });
 }

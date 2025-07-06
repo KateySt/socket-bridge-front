@@ -85,7 +85,6 @@ export async function selectCompanyAction(formData: FormData) {
   redirect(`/companies/${companyId}`);
 }
 
-
 export async function approveRequestAction(formData: FormData) {
   try {
     const cookieStore = await cookies();

@@ -34,9 +34,11 @@ export async function GET(request: NextRequest, {params}: { params: { id: string
     );
   }
 
+  const data = await res.json();
+
   return NextResponse.json({
     success: true,
-    users: res,
+    quizzes: data,
   });
 }
 

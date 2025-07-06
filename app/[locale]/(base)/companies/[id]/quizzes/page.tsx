@@ -1,21 +1,19 @@
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { getCompany } from '@/api/companies';
 import CreateQuizModal from '@/component/CreateQuizModal/CreateQuizModal';
-import {getCompanyQuizzes} from "@/api/quizzes";
-/*
+import {deleteQuiz, getCompanyQuizzes} from "@/api/quizzes";
+import EditQuizModal from "@/component/EditQuizModal/EditQuizModal";
+import {redirect} from "next/navigation";
+import DeleteQuizModal from "@/component/DeleteQuizModal/DeleteQuizModal";
+
 export default async function CompanyQuizzesPage({ params }: { params: { id: string, locale: string } }) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const user = JSON.parse(cookieStore.get("user")?.value ?? '{}');
+  const company = await getCompany(id);
+  const {quizzes} = await getCompanyQuizzes(id);
 
-  const company = await getCompany(params.id);
-  const quizzes = await getCompanyQuizzes(params.id);
-
-  if (!user || !company || !company.id) {
-    redirect('/login');
-  }
-
-  const isAdmin = user.id === company.owner_id || company.admins?.includes(user.id);
+  const isAdmin = user.id === company.owner_id || company.admin_ids.includes(user.id);
 
   return (
     <div className="p-10">
@@ -24,38 +22,30 @@ export default async function CompanyQuizzesPage({ params }: { params: { id: str
       {isAdmin && (
         <CreateQuizModal companyId={company.id} ownerId={user.id} />
       )}
-
       {quizzes.length === 0 ? (
         <p>No quizzes available for this company.</p>
       ) : (
         <div className="space-y-4">
           {quizzes.map((quiz: any) => (
-            <div key={quiz.id} className="border p-4 rounded shadow bg-white">
+            <div key={quiz.id} className="border p-4 rounded shadow bg-white text-primary">
               <h2 className="text-xl font-semibold">{quiz.title}</h2>
               <p className="text-sm text-gray-600 mb-2">{quiz.description}</p>
-              <p className="text-sm">Frequency: every {quiz.frequencyDays} days</p>
+              <p className="text-sm">Frequency: every {quiz.frequency_days} days</p>
               <ul className="list-disc list-inside mt-2">
                 {quiz.questions.map((q: any, index: number) => (
                   <li key={index}>
                     <strong>{q.text}</strong>
-                    <ul className="list-circle ml-6">
-                      {q.options.map((option: string, idx: number) => (
-                        <li key={idx} className={q.correctAnswers.includes(option) ? 'font-bold text-green-600' : ''}>
-                          {option}
-                        </li>
-                      ))}
-                    </ul>
                   </li>
                 ))}
               </ul>
               {isAdmin && (
                 <div className="flex gap-2 mt-4">
-                  <EditQuizModal quiz={quiz} ownerId={user.id} />
+                  <EditQuizModal quiz={quiz} ownerId={user.id} companyId={company.id} />
                   <DeleteQuizModal
-                    onDelete={async () => {
+                    action={async () => {
                       'use server';
                       await deleteQuiz(quiz.id, user.id);
-                      redirect(`/companies/${params.id}/quizzes`);
+                      redirect(`/companies/${id}/quizzes`);
                     }}
                   />
                 </div>
@@ -67,4 +57,3 @@ export default async function CompanyQuizzesPage({ params }: { params: { id: str
     </div>
   );
 }
-*/

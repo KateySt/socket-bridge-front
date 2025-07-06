@@ -9,6 +9,8 @@ import React from "react";
 import ListRequests from "@/component/ListRequests/ListRequests";
 import ListMembers from "@/component/ListMembers/ListMembers";
 import ListAdmins from "@/component/ListAdmins/ListAdmins";
+import {Link} from "@/i18n/navigation";
+import {Router} from "@/utils/router";
 
 export default async function CompanyProfile({params}: { params: Promise<{ id: string; locale: string }> }) {
   const {id} = await params;
@@ -21,9 +23,12 @@ export default async function CompanyProfile({params}: { params: Promise<{ id: s
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-4">{company.name}</h1>
+      <Link href={Router.Companies + "/" + id + Router.Quizzes} className="btn btn-secondary">
+        Quizzes
+      </Link>
       <p>{company.description}</p>
       {userRaw.id === company.owner_id ? (
-        <div className='flex flex-row gap-2 mt-3'>
+        <div className="flex flex-row gap-2 mt-3">
           <EditCompanyModal/>
           <DeleteCompanyModal action={deleteUserCompany}/>
         </div>
@@ -45,7 +50,7 @@ export default async function CompanyProfile({params}: { params: Promise<{ id: s
           <ListRequests id={id}/>
         </>
       )}
-      <ListMembers id={id} ownerId={company.owner_id} />
+      <ListMembers id={id} ownerId={company.owner_id}/>
     </div>
   );
 }

@@ -85,7 +85,6 @@ export async function POST(request: NextRequest, {params}: { params: { id: strin
   });
 }
 
-
 export async function PUT(request: NextRequest, {params}: { params: { id: string } }) {
   const {name, description, companyId} = await request.json();
   const token = request.headers.get("authorization")?.trim();

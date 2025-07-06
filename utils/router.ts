@@ -1,8 +1,9 @@
 export enum Router {
-    Home = "/",
-    About = "/about",
-    Users = "/users",
-    Companies = "/companies",
-    Register = "/register",
-    Login = "/login"
+  Home = "/",
+  About = "/about",
+  Users = "/users",
+  Companies = "/companies",
+  Register = "/register",
+  Login = "/login",
+  Quizzes = "/quizzes"
 }

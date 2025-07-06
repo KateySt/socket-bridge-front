@@ -1,23 +1,24 @@
 "use client";
+
 import {Modal} from "@/component/modal/Modal";
 import ButtonModal from "@/component/buttonModal/ButtonModal";
 import React, {useState} from "react";
-import {createQuizAction} from "@/action/quiz";
+import {updateQuizAction} from "@/action/quiz";
 
-const modalId = "create-quiz-modal";
+const modalId = "edit-quiz-modal";
 
-export default function CreateQuizModal({ companyId, ownerId }: { companyId: string; ownerId: string }) {
-  const [questions, setQuestions] = useState([
-    { text: "", options: ["", ""], correctAnswers: [""] }
-  ]);
+export default function EditQuizModal({quiz, companyId,ownerId}: { quiz: any, companyId: string,ownerId: string }) {
+  const [questions, setQuestions] = useState(
+    quiz.questions.map(q => ({
+      text: q.text,
+      options: q.options,
+      correctAnswers: q.correct_answer,
+    }))
+  );
 
-  const addQuestion = () => {
-    setQuestions([...questions, { text: "", options: ["", ""], correctAnswers: [""] }]);
-  };
-
-  const handleChange = (index: number, field: string, value: any) => {
+  const handleChange = (qIndex: number, field: string, value: any) => {
     const updated = [...questions];
-    if (field === "text") updated[index].text = value;
+    if (field === "text") updated[qIndex].text = value;
     setQuestions(updated);
   };
 
@@ -47,64 +48,67 @@ export default function CreateQuizModal({ companyId, ownerId }: { companyId: str
 
   return (
     <>
-      <ButtonModal text="+ Add Quiz" id={modalId} />
+      <ButtonModal text="Edit Quiz" id={modalId} />
 
-      <Modal id={modalId} title="Create New Quiz">
-        <form action={createQuizAction} className="space-y-4">
-          <input type="hidden" name="companyId" value={companyId} />
+      <Modal id={modalId} title="Edit Quiz">
+        <form action={updateQuizAction} className="space-y-4">
+          <input type="hidden" name="quizId" value={quiz.id} />
           <input type="hidden" name="ownerId" value={ownerId} />
-
+          <input type="hidden" name="companyId" value={companyId} />
           <input
             type="text"
             name="title"
+            defaultValue={quiz.title}
             placeholder="Quiz Title"
             className="input input-bordered w-full"
             required
           />
+
           <textarea
             name="description"
+            defaultValue={quiz.description}
             placeholder="Quiz Description"
             className="textarea textarea-bordered w-full"
             required
           />
+
           <input
             type="number"
             name="frequencyDays"
+            defaultValue={quiz.frequency_days}
             placeholder="Frequency (in days)"
             className="input input-bordered w-full"
             min={1}
             required
           />
 
-          <div className="flex gap-2 flex-col max-h-[200px] overflow-y-auto">
+          <div className="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
             {questions.map((q, qIndex) => (
               <div key={qIndex} className="border p-4 rounded bg-gray-100">
                 <input
                   type="text"
                   name={`questions[${qIndex}].text`}
-                  placeholder={`Question ${qIndex + 1}`}
                   className="input input-bordered w-full mb-2"
-                  required
                   value={q.text}
-                  onChange={(e) => handleChange(qIndex, "text", e.target.value)}
+                  onChange={e => handleChange(qIndex, "text", e.target.value)}
+                  required
                 />
 
-                {q.options.map((option, oIndex) => (
+                {q.options.map((opt, oIndex) => (
                   <input
                     key={oIndex}
                     type="text"
                     name={`questions[${qIndex}].options[${oIndex}]`}
-                    placeholder={`Option ${oIndex + 1}`}
                     className="input input-bordered w-full mb-1"
+                    value={opt}
+                    onChange={e => handleOptionChange(qIndex, oIndex, e.target.value)}
                     required
-                    value={option}
-                    onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
                   />
                 ))}
 
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary mb-2"
+                  className="btn btn-sm btn-secondary mt-1"
                   onClick={() => addOption(qIndex)}
                 >
                   + Add Option
@@ -135,14 +139,8 @@ export default function CreateQuizModal({ companyId, ownerId }: { companyId: str
             ))}
           </div>
 
-          <button type="button" className="btn btn-secondary w-full" onClick={addQuestion}>
-            + Add Question
-          </button>
-
           <div className="modal-action w-full">
-            <button type="submit" className="btn btn-success w-full">
-              Create Quiz
-            </button>
+            <button type="submit" className="btn btn-primary w-full">Save Changes</button>
           </div>
         </form>
       </Modal>

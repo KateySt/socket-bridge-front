@@ -15,7 +15,6 @@ export default async function CompaniesPage() {
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-4">Companies</h1>
-
       <CreateCompanyModal/>
 
       <ul className="py-2 px-4 bg-base-100 w-full rounded-box">
