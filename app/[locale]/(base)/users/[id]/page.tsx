@@ -7,12 +7,15 @@ import {Router} from "@/utils/router";
 import DeleteUserModal from "@/component/DeleteUserModal/DeleteUserModal";
 import React from "react";
 import {acceptInvitationAction, cancelRequestAction, declineInvitationAction, deleteProfile} from "@/action/user";
+import CustomChart from "@/component/CustomChart/CustomChart";
+import {ChartData} from "chart.js";
+import {getQuizScoresOverTime} from "@/api/analytic";
 
 export default async function UserProfile({params}: { params: Promise<{ id: string; locale: string }> }) {
   try {
     const {id} = await params;
     const cookieStore = await cookies();
-    const access_token = cookieStore.get('access_token')?.value;
+    const access_token = cookieStore.get("access_token")?.value;
 
     if (!access_token) {
       redirect(Router.Login);
@@ -21,6 +24,20 @@ export default async function UserProfile({params}: { params: Promise<{ id: stri
     const user = await me();
     const userInvitations = await getInvitations(id);
     const userRequests = await getRequests(id);
+    const chartQuiz = await getQuizScoresOverTime(id);
+
+    const sampleData: ChartData<"line"> = {
+      labels: chartQuiz?.labels ?? [],
+      datasets: [
+        {
+          label: chartQuiz?.label ?? "",
+          data: chartQuiz?.data ?? [],
+          fill: false,
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0.3,
+        },
+      ],
+    };
 
     if (!user) return <div className="p-10">User not found</div>;
 
@@ -34,13 +51,18 @@ export default async function UserProfile({params}: { params: Promise<{ id: stri
           <ProfileItem label="First Name" value={user.firstName}/>
           <ProfileItem label="Last Name" value={user.lastName}/>
           <ProfileItem label="ID" value={user.id}/>
-          <ProfileItem label="Email Verified" value={user.emailVerified ? 'Yes' : 'No'}/>
-          <ProfileItem label="2FA Enabled" value={user.totp ? 'Yes' : 'No'}/>
+          <ProfileItem label="Email Verified" value={user.emailVerified ? "Yes" : "No"}/>
+          <ProfileItem label="2FA Enabled" value={user.totp ? "Yes" : "No"}/>
           <ProfileItem label="Created" value={new Date(user.createdTimestamp).toLocaleString()}/>
         </div>
-        <div className='flex flex-row gap-2'>
+        <div className="flex flex-row gap-2">
           <EditUserModal/>
           <DeleteUserModal action={deleteProfile}/>
+        </div>
+
+        <div className="p-2">
+          <h2 className="text-xl font-bold mb-4">Quiz Scores Over Time</h2>
+          <CustomChart data={sampleData}/>
         </div>
 
         <div className="mt-10">

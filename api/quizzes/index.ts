@@ -30,3 +30,22 @@ export async function deleteQuiz(quizId: string, id: string) {
     data: quizId,
   });
 }
+
+export async function quizAttempt(quiz: any) {
+  return await serverApiRequest({
+    method: "POST",
+    url: "/quizzes/attempt",
+    data: quiz,
+  });
+}
+
+export async function getAverageScore(id: string, companyId: string) {
+  return await serverApiRequest({
+    method: "GET",
+    url: "/quizzes/average-score",
+    headers: {
+      "X-User-Id": id,
+      "companyId": companyId
+    }
+  });
+}

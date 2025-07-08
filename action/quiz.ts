@@ -1,7 +1,7 @@
 "use server";
 
 import {redirect} from "next/navigation";
-import {createQuiz, updateQuiz} from "@/api/quizzes";
+import {createQuiz, quizAttempt, updateQuiz} from "@/api/quizzes";
 
 export async function createQuizAction(formData: FormData) {
   const title = formData.get("title")?.toString() ?? "";
@@ -28,7 +28,7 @@ export async function createQuizAction(formData: FormData) {
       }
     }
 
-    questions.push({ text, options, correct_answers });
+    questions.push({text, options, correct_answers});
   }
 
   const quiz = {
@@ -71,7 +71,7 @@ export async function updateQuizAction(formData: FormData) {
       }
     }
 
-    questions.push({ text, options, correct_answers });
+    questions.push({text, options, correct_answers});
   }
 
   const quiz = {
@@ -85,5 +85,20 @@ export async function updateQuizAction(formData: FormData) {
 
   await updateQuiz(quiz, quizId);
 
+  redirect(`/companies/${companyId}/quizzes`);
+}
+
+export async function submitQuizAttempt({
+                                          quizId,
+                                          companyId,
+                                          answers,
+                                          userId,
+                                        }: {
+  quizId: number;
+  companyId: number;
+  answers: { questionId: number; selectedOptions: string[] }[];
+  userId: string
+}) {
+  await quizAttempt({quizId, companyId, answers, userId})
   redirect(`/companies/${companyId}/quizzes`);
 }

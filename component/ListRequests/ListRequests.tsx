@@ -10,7 +10,7 @@ const ListRequests = async ({id}: { id: string }) => {
 
   return (
     <div className="mt-10">
-      <h2 className="text-2xl font-semibold mb-4">Invited Users</h2>
+      <h2 className="text-2xl font-semibold mb-4">Request Users</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {users.length > 0 && users.map(user => (
           <div

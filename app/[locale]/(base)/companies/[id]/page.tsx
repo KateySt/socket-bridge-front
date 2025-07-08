@@ -11,18 +11,28 @@ import ListMembers from "@/component/ListMembers/ListMembers";
 import ListAdmins from "@/component/ListAdmins/ListAdmins";
 import {Link} from "@/i18n/navigation";
 import {Router} from "@/utils/router";
+import Stars from "@/component/Stars/Stars";
+import {getRatingCompany} from "@/api/analytic";
 
 export default async function CompanyProfile({params}: { params: Promise<{ id: string; locale: string }> }) {
   const {id} = await params;
   const company = await getCompany(id);
   const cookieStore = await cookies();
   const userRaw = JSON.parse(cookieStore.get("user")?.value ?? "");
+  const {averageScore} = await getRatingCompany(id);
 
   if (!company) return <div className="p-10">Company not found</div>;
 
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-4">{company.name}</h1>
+      <div className="mb-6">
+        <p className="text-lg font-medium">Rating:</p>
+        <div className="flex items-center gap-2">
+          <Stars score={averageScore}/>
+          <span className="text-sm text-gray-500">({averageScore.toFixed(1)} / 10)</span>
+        </div>
+      </div>
       <Link href={Router.Companies + "/" + id + Router.Quizzes} className="btn btn-secondary">
         Quizzes
       </Link>
