@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 
-export async function PUT(request: NextRequest, {params}: { params: { id: string } }) {
+export async function PUT(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   const {first_name, last_name} = await request.json();
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
@@ -50,7 +50,7 @@ export async function PUT(request: NextRequest, {params}: { params: { id: string
   });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const token = request.headers.get("authorization")?.trim();
   const { id } = await params;
 

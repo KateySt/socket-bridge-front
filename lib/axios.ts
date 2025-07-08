@@ -1,4 +1,4 @@
-import axios, {AxiosRequestHeaders} from 'axios';
+import axios from 'axios';
 import {cookies} from "next/headers";
 
 const api = axios.create({
@@ -16,7 +16,7 @@ interface ServerApiRequestOptions {
   url: string;
   data?: any;
   params?: any;
-  headers?: AxiosRequestHeaders;
+  headers?: Record<string, string>;
 }
 
 export async function serverApiRequest<T = any>({

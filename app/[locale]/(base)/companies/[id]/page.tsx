@@ -12,14 +12,49 @@ import ListAdmins from "@/component/ListAdmins/ListAdmins";
 import {Link} from "@/i18n/navigation";
 import {Router} from "@/utils/router";
 import Stars from "@/component/Stars/Stars";
-import {getRatingCompany} from "@/api/analytic";
+import {getAvgByAllUser, getAvgByQuiz, getLastCompletions, getRatingCompany} from "@/api/analytic";
+import AdminAnalytics from "@/component/AdminAnalytics/AdminAnalytics";
+import {ChartData} from "chart.js";
+import CustomChart from "@/component/CustomChart/CustomChart";
 
 export default async function CompanyProfile({params}: { params: Promise<{ id: string; locale: string }> }) {
   const {id} = await params;
-  const company = await getCompany(id);
   const cookieStore = await cookies();
+  const company = await getCompany(id);
   const userRaw = JSON.parse(cookieStore.get("user")?.value ?? "");
   const {averageScore} = await getRatingCompany(id);
+
+  const isAdmin = userRaw.id === company.owner_id || company.admin_ids.includes(userRaw.id);
+
+  const chartQuiz = await getAvgByAllUser();
+
+  const sampleData: ChartData<"line"> = {
+    labels: chartQuiz?.labels ?? [],
+    datasets: [
+      {
+        label: chartQuiz?.label ?? "",
+        data: chartQuiz?.data ?? [],
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const chartByQuiz = await getAvgByQuiz();
+
+  const sampleDataByQuiz: ChartData<"line"> = {
+    labels: chartByQuiz?.labels ?? [],
+    datasets: [
+      {
+        label: chartByQuiz?.label ?? "",
+        data: chartByQuiz?.data ?? [],
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.3,
+      },
+    ],
+  };
 
   if (!company) return <div className="p-10">Company not found</div>;
 
@@ -33,10 +68,21 @@ export default async function CompanyProfile({params}: { params: Promise<{ id: s
           <span className="text-sm text-gray-500">({averageScore.toFixed(1)} / 10)</span>
         </div>
       </div>
+      <p>{company.description}</p>
       <Link href={Router.Companies + "/" + id + Router.Quizzes} className="btn btn-secondary">
         Quizzes
       </Link>
-      <p>{company.description}</p>
+
+      <div className="p-2">
+        <h2 className="text-xl font-bold mb-4">Analytic</h2>
+        <CustomChart data={sampleData}/>
+        <CustomChart data={sampleDataByQuiz}/>
+      </div>
+
+      {isAdmin && (
+        <AdminAnalytics id={id} userId={userRaw.id} />
+      )}
+
       {userRaw.id === company.owner_id ? (
         <div className="flex flex-row gap-2 mt-3">
           <EditCompanyModal/>

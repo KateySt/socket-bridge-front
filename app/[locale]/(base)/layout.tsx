@@ -2,18 +2,16 @@ import React from "react";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
-export default async function Layout({
-                                 children,
-                                 params,
-                               }: {
+export default async function Layout({children, params,}: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token");
+  const {locale} = await params;
 
   if (!token) {
-    redirect(`/${params.locale}/login`);
+    redirect(`/${locale}/login`);
   }
 
   return children;

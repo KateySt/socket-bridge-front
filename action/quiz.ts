@@ -83,6 +83,8 @@ export async function updateQuizAction(formData: FormData) {
     questions,
   };
 
+  if (!quizId) return;
+
   await updateQuiz(quiz, quizId);
 
   redirect(`/companies/${companyId}/quizzes`);

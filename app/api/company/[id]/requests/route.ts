@@ -1,15 +1,15 @@
 import {NextRequest, NextResponse} from "next/server";
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  const { ownerId } = await request.json();
-  const { id } = await params;
+export async function POST(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
+  const {ownerId} = await request.json();
+  const {id} = await params;
 
   const token = request.headers.get("authorization")?.trim();
 
   if (!token) {
     return NextResponse.json(
-      { success: false, error: "Unauthorized: No access token" },
-      { status: 401 }
+      {success: false, error: "Unauthorized: No access token"},
+      {status: 401}
     );
   }
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         success: false,
         error: errorData.error || errorData.message || "Failed to fetch invitations",
       },
-      { status: invitationsRes.status }
+      {status: invitationsRes.status}
     );
   }
 
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
   if (!usersRes.ok) {
     const errorText = await usersRes.text().catch(() => "Unknown error");
-    return NextResponse.json({ success: false, error: errorText }, { status: usersRes.status });
+    return NextResponse.json({success: false, error: errorText}, {status: usersRes.status});
   }
 
   const users = await usersRes.json();

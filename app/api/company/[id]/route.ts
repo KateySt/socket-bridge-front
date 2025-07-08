@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 
-export async function GET(request: NextRequest, {params}: { params: { id: string } }) {
+export async function GET(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, {params}: { params: { id: string
   });
 }
 
-export async function POST(request: NextRequest, {params}: { params: { id: string } }) {
+export async function POST(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   const {name, description, visible} = await request.json();
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest, {params}: { params: { id: strin
   });
 }
 
-export async function PUT(request: NextRequest, {params}: { params: { id: string } }) {
+export async function PUT(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   const {name, description, companyId} = await request.json();
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
@@ -124,7 +124,7 @@ export async function PUT(request: NextRequest, {params}: { params: { id: string
   return NextResponse.json({success: true});
 }
 
-export async function DELETE(request: NextRequest, {params}: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   const token = request.headers.get("authorization")?.trim();
   const {id} = await params;
   let companyId: string | undefined;

@@ -1,5 +1,6 @@
 import {getUsers} from "@/api/users";
 import {cookies} from "next/headers";
+import {ExportButton} from "@/component/ExportButton/ExportButton";
 
 export default async function UsersPage() {
   const cookieStore = await cookies();
@@ -24,6 +25,18 @@ export default async function UsersPage() {
               <div className="cursor-default">
                 <span>{user.firstName} {user.lastName}</span>
                 <span>{user.email}</span>
+                <div className="flex gap-2">
+                  <ExportButton
+                    userId={user.id}
+                    requesterId={userRaw.id}
+                    format="CSV"
+                  />
+                  <ExportButton
+                    userId={user.id}
+                    requesterId={userRaw.id}
+                    format="JSON"
+                  />
+                </div>
               </div>
             )}
           </li>

@@ -8,7 +8,7 @@ import DeleteQuizModal from "@/component/DeleteQuizModal/DeleteQuizModal";
 import TakeQuizModal from "@/component/TakeQuizModal/TakeQuizModal";
 import Stars from "@/component/Stars/Stars";
 
-export default async function CompanyQuizzesPage({params}: { params: { id: string, locale: string } }) {
+export default async function CompanyQuizzesPage({params}: { params: Promise<{ id: string; locale: string }> }) {
   const {id} = await params;
   const cookieStore = await cookies();
   const user = JSON.parse(cookieStore.get("user")?.value ?? "{}");
