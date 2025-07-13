@@ -8,10 +8,10 @@ export async function createQuiz(quiz: any) {
   });
 }
 
-export async function getCompanyQuizzes(id: string) {
+export async function getCompanyQuizzes(id: string, page = 0, size = 10) {
   return await serverApiRequest({
     method: "GET",
-    url: `/company/${id}/quizzes`,
+    url: `/company/${id}/quizzes?page=${page}&size=${size}`,
   });
 }
 

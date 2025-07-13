@@ -1,9 +1,9 @@
 import {serverApiRequest} from "@/lib/axios";
 
-export async function getCompanies(userId: string) {
+export async function getCompanies(userId: string, page = 0, size = 10, query = "") {
   return await serverApiRequest({
     method: 'GET',
-    url: '/company',
+    url: `/company?query=${encodeURIComponent(query)}&page=${page}&size=${size}`,
     headers: {
       'X-User-Id': userId,
     },

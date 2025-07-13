@@ -8,14 +8,17 @@ import DeleteQuizModal from "@/component/DeleteQuizModal/DeleteQuizModal";
 import TakeQuizModal from "@/component/TakeQuizModal/TakeQuizModal";
 import Stars from "@/component/Stars/Stars";
 
-export default async function CompanyQuizzesPage({params}: { params: Promise<{ id: string; locale: string }> }) {
+export default async function CompanyQuizzesPage({params,searchParams}: { params: Promise<{ id: string; locale: string }>, searchParams: Promise<{ page?: string; }>; }) {
   const {id} = await params;
+  const {page} = await searchParams;
   const cookieStore = await cookies();
   const user = JSON.parse(cookieStore.get("user")?.value ?? "{}");
   const company = await getCompany(id);
-  const {quizzes} = await getCompanyQuizzes(id);
+  const {quizzes} = await getCompanyQuizzes(id, Number(page??0));
+
   const {averageScore} = await getAverageScore(user.id, id);
   const isAdmin = user.id === company.owner_id || company.admin_ids.includes(user.id);
+  const totalPages = quizzes.total_pages;
 
   return (
     <div className="p-10">
@@ -32,11 +35,11 @@ export default async function CompanyQuizzesPage({params}: { params: Promise<{ i
       {isAdmin && (
         <CreateQuizModal companyId={company.id} ownerId={user.id}/>
       )}
-      {quizzes.length === 0 ? (
+      {quizzes.content.length === 0 ? (
         <p>No quizzes available for this company.</p>
       ) : (
         <div className="space-y-4">
-          {quizzes.map((quiz: any) => (
+          {quizzes.content.map((quiz: any) => (
             <div key={quiz.id} className="border p-4 rounded shadow bg-white text-primary">
               <h2 className="text-xl font-semibold">{quiz.title}</h2>
               <p className="text-sm text-gray-600 mb-2">{quiz.description}</p>
@@ -73,6 +76,18 @@ export default async function CompanyQuizzesPage({params}: { params: Promise<{ i
           ))}
         </div>
       )}
+
+      <div className="mt-4 flex gap-2">
+        {[...Array(totalPages)].map((_, idx) => (
+          <a
+            key={idx}
+            href={`?page=${idx}`}
+            className={`btn btn-sm ${idx === page ? "btn-primary" : "btn-outline"}`}
+          >
+            {idx + 1}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }

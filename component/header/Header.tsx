@@ -5,6 +5,7 @@ import {LanguageSelect} from "@/component/select/LanguageSelect";
 import {Link} from "@/i18n/navigation";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import {NotificationsDropdown} from "@/component/NotificationsDropdown/NotificationsDropdown";
 
 async function logout() {
   "use server";
@@ -18,7 +19,7 @@ export async function Header() {
   const t = await getTranslations();
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token");
-
+  const user = JSON.parse(cookieStore.get("user")?.value ?? "{}");
   const isAuthenticated = Boolean(token);
 
   const listLinks = (
@@ -52,6 +53,8 @@ export async function Header() {
           {t("nav.app")}
         </Link>
       </div>
+
+      <NotificationsDropdown />
 
       <LanguageSelect/>
 

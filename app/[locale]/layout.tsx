@@ -3,9 +3,9 @@ import {Geist} from "next/font/google";
 import "../globals.css";
 import {Header} from "@/component/header/Header";
 import React from "react";
-import {hasLocale, NextIntlClientProvider} from 'next-intl';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import {hasLocale, NextIntlClientProvider} from "next-intl";
+import {notFound} from "next/navigation";
+import {routing} from "@/i18n/routing";
 import {setRequestLocale} from "next-intl/server";
 
 const geistSans = Geist({
@@ -40,10 +40,10 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
     <body className={`${geistSans.variable} antialiased`}>
-      <NextIntlClientProvider>
-        <Header/>
-        <main className="p-6">{children}</main>
-      </NextIntlClientProvider>
+    <NextIntlClientProvider>
+      <Header/>
+      <main className="p-6">{children}</main>
+    </NextIntlClientProvider>
     </body>
     </html>
   );

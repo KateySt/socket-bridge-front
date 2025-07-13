@@ -4,6 +4,9 @@ export async function GET(request: NextRequest, {params}: { params: Promise<{ id
   const {id} = await params;
 
   const token = request.headers.get("authorization")?.trim();
+  const searchParams = request.nextUrl.searchParams;
+  const page = searchParams.get("page") ?? "0";
+  const size = searchParams.get("size") ?? "10";
 
   if (!token) {
     return NextResponse.json(
@@ -13,7 +16,7 @@ export async function GET(request: NextRequest, {params}: { params: Promise<{ id
   }
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_BACK}/quizzes/api/quizzes/company/${id}`,
+    `${process.env.NEXT_PUBLIC_URL_BACK}/quizzes/api/quizzes/company/${id}?page=${page}&size=${size}`,
     {
       method: "GET",
       headers: {
